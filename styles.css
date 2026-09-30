@@ -1,0 +1,169 @@
+/* ===== 重塑计划表 · 紫色多巴胺 ===== */
+:root{
+  --p:#7C3AED; --p2:#A855F7; --deep:#5B21B6; --lav:#EDE7FB;
+  --bg:#F4F0FB; --card:#FFFFFF; --ink:#2A2344; --mut:#8A7FA8;
+  --line:#E5DDF5; --we:#FF7AB6;
+  --base:#8B5CF6; --train:#FF4D6D; --eat:#2FD7A5; --skin:#FF7AB6;
+  --work:#38B6FF; --read:#A78BFA; --rest:#22C1DC; --stock:#FFC53D;
+  --prep:#FF8A3D; --commute:#4DD4FA; --supp:#FF6B6B;
+  --grad:linear-gradient(135deg,#7C3AED 0%,#A855F7 55%,#FF7AB6 130%);
+  --shadow:0 4px 18px rgba(124,58,237,.10);
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:15px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  touch-action:manipulation}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit;touch-action:manipulation}
+input,select{font:inherit}
+
+#app{max-width:560px;margin:0 auto;padding:14px 14px calc(76px + var(--safe-b))}
+
+/* ===== 顶栏 hero ===== */
+.hero{background:var(--grad);border-radius:20px;padding:18px 20px;color:#fff;
+  display:flex;justify-content:space-between;align-items:flex-end;box-shadow:var(--shadow)}
+.hd-date{font-size:30px;font-weight:800;line-height:1.15;font-variant-numeric:tabular-nums}
+.hd-week{font-size:13px;opacity:.9}
+.hero-r{text-align:right}
+.hd-lunar{font-size:13.5px;font-weight:600}
+.hd-gz{font-size:11.5px;opacity:.85}
+
+/* ===== 进度卡 ===== */
+.prog-card{background:var(--card);border-radius:16px;padding:14px 16px;margin-top:12px;box-shadow:var(--shadow)}
+.prog-txt{display:flex;justify-content:space-between;font-size:13px;color:var(--mut)}
+.prog-txt b{font-size:15px;color:var(--ink);font-variant-numeric:tabular-nums}
+.prog-bar{height:10px;background:var(--lav);border-radius:99px;overflow:hidden;margin-top:8px}
+.prog-bar i{display:block;height:100%;width:0;border-radius:99px;
+  background:linear-gradient(90deg,#7C3AED,#FF7AB6,#FFC53D);transition:width .3s}
+
+/* ===== 区块头 ===== */
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin:18px 2px 10px}
+.sec-head h2{font-size:16px;margin:0;font-weight:700}
+.page-head{margin-top:22px}
+.hint{font-size:12.5px;color:var(--mut);margin:-4px 2px 10px}
+.btn-add{background:var(--grad);color:#fff;border-radius:12px;padding:9px 16px;font-weight:700;
+  font-size:14px;box-shadow:0 3px 10px rgba(124,58,237,.28)}
+.btn-add:active{transform:scale(.95)}
+.btn-ghost{background:var(--card);color:var(--p);border:1.5px solid var(--line);
+  border-radius:12px;padding:9px 18px;font-weight:600;font-size:13.5px}
+.btn-ghost:active{background:var(--lav)}
+
+/* ===== 任务行 ===== */
+.tasklist{display:flex;flex-direction:column;gap:9px}
+.task{background:var(--card);border-radius:16px;padding:12px 14px;display:flex;gap:11px;
+  align-items:center;box-shadow:var(--shadow);border-left:5px solid var(--cat,#8B5CF6)}
+.task .ck{width:24px;height:24px;min-width:24px;border-radius:8px;border:2px solid #CDBFF2;
+  display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff}
+.task.done .ck{background:var(--eat);border-color:var(--eat)}
+.task .bd{flex:1;min-width:0}
+.task .tt{font-size:14.5px;font-weight:600;word-break:break-word}
+.task.done .tt{text-decoration:line-through;color:var(--mut)}
+.task .mt{display:flex;gap:7px;align-items:center;margin-top:3px;flex-wrap:wrap}
+.task .tm{font-size:12px;color:var(--mut);font-variant-numeric:tabular-nums}
+.task .cat{font-size:10.5px;font-weight:700;padding:2.5px 8px;border-radius:99px;color:#fff;
+  background:var(--cat,#8B5CF6)}
+.task .del{font-size:15px;color:#D5CCEF;padding:4px 6px;min-width:32px}
+.task .del:active{color:var(--train)}
+.empty{text-align:center;color:var(--mut);font-size:13px;padding:36px 0}
+.empty b{display:block;font-size:30px;margin-bottom:6px}
+
+/* ===== 日历 ===== */
+.cal-head{display:flex;align-items:center;justify-content:space-between;
+  background:var(--card);border-radius:16px;padding:10px 14px;box-shadow:var(--shadow)}
+.cal-title{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums}
+.nav-btn{width:40px;height:36px;border-radius:11px;background:var(--lav);color:var(--p);
+  font-size:22px;font-weight:800;line-height:1}
+.nav-btn:active{background:#DCCFF8}
+.cal-week{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;
+  font-size:12px;color:var(--mut);margin:12px 0 4px}
+.cal-week .we{color:var(--we);font-weight:700}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cell{aspect-ratio:1/1.02;background:var(--card);border-radius:13px;padding:5px 2px 3px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;
+  position:relative;border:1.5px solid transparent}
+.cell:active{background:var(--lav)}
+.cell .d{font-size:15.5px;font-weight:700;line-height:1.25;font-variant-numeric:tabular-nums}
+.cell .s{font-size:9px;color:var(--mut);line-height:1.2;max-width:100%;overflow:hidden;
+  white-space:nowrap;text-overflow:ellipsis;padding:0 2px}
+.cell.we .d{color:var(--we)}
+.cell.out{opacity:.38}
+.cell.fest .s{color:var(--train);font-weight:700}
+.cell.term .s{color:var(--eat);font-weight:700}
+.cell.today{background:var(--grad);border-color:transparent;box-shadow:0 4px 12px rgba(124,58,237,.4)}
+.cell.today .d,.cell.today .s{color:#fff}
+.cell.today .s{opacity:.92}
+.cell.sel{border-color:var(--p)}
+.cell.sel:not(.today) .d{color:var(--p)}
+.cal-foot{display:flex;justify-content:center;margin-top:12px}
+
+/* 当日面板 */
+.day-panel{margin-top:16px;background:var(--card);border-radius:18px;padding:14px 16px 16px;box-shadow:var(--shadow)}
+.dp-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.dp-date{font-size:17px;font-weight:800}
+.dp-lunar{font-size:12.5px;color:var(--mut)}
+
+/* ===== 计划模板 / 我的 ===== */
+.me-card,.wt-card{background:var(--card);border-radius:16px;padding:14px 16px;box-shadow:var(--shadow)}
+.me-card{display:flex;flex-direction:column;gap:9px}
+.me-card.install p{margin:2px 0;font-size:13px;color:var(--mut);line-height:1.7}
+.me-card.install b{color:var(--ink)}
+.me-btn{text-align:left;padding:12px 14px;border-radius:12px;background:var(--bg);
+  font-size:14px;font-weight:600;color:var(--ink)}
+.me-btn:active{background:var(--lav)}
+.me-btn.danger{color:var(--train)}
+.about{text-align:center;color:var(--mut);font-size:11.5px;margin-top:26px}
+
+/* 体重 */
+.wt-row{display:flex;gap:9px}
+.wt-row input{flex:1;border:1.5px solid var(--line);border-radius:12px;padding:10px 14px;
+  font-size:15px;outline:none;background:var(--bg);min-width:0}
+.wt-row input:focus{border-color:var(--p)}
+#wtChart{width:100%;height:110px;margin-top:12px}
+.wt-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+.wt-kpis div{background:var(--bg);border-radius:12px;padding:8px 6px;text-align:center}
+.wt-kpis b{display:block;font-size:16px;font-variant-numeric:tabular-nums}
+.wt-kpis span{font-size:10.5px;color:var(--mut)}
+
+/* ===== 底部导航 ===== */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:40;
+  padding-bottom:var(--safe-b);background:rgba(255,255,255,.96);
+  backdrop-filter:blur(10px);border-top:1px solid var(--line);
+  display:flex;justify-content:center}
+.tabbar .inner{display:flex;width:100%;max-width:560px}
+.tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;
+  padding:7px 0 6px;font-size:10.5px;color:var(--mut)}
+.tab .ti{font-size:19px;line-height:1.2;filter:grayscale(1) opacity(.6)}
+.tab.on{color:var(--p);font-weight:700}
+.tab.on .ti{filter:none}
+
+/* ===== 弹层 ===== */
+.mask{position:fixed;inset:0;background:rgba(42,35,68,.45);z-index:50;display:none}
+.mask.on{display:block}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:51;background:var(--card);
+  border-radius:22px 22px 0 0;padding:10px 18px calc(18px + var(--safe-b));
+  transform:translateY(105%);transition:transform .24s ease;max-width:560px;margin:0 auto}
+.sheet.on{transform:none}
+.sheet-grip{width:40px;height:4px;border-radius:99px;background:var(--line);margin:2px auto 10px}
+.sheet h3{margin:0 0 12px;font-size:16.5px}
+.sheet fieldset{border:none;margin:0 0 12px;padding:0}
+.sheet label{display:block;font-size:12px;color:var(--mut);margin-bottom:5px}
+.sheet input[type="text"],.sheet input[type="number"],.sheet input[type="time"],
+.sheet input[type="date"],.sheet select{width:100%;border:1.5px solid var(--line);
+  border-radius:12px;padding:11px 13px;font-size:15px;outline:none;background:var(--bg)}
+.sheet input:focus,.sheet select:focus{border-color:var(--p)}
+.cat-pick{display:flex;flex-wrap:wrap;gap:7px}
+.cat-pick button{padding:7px 11px;border-radius:99px;font-size:12px;font-weight:700;
+  background:var(--bg);color:var(--mut);border:1.5px solid var(--line)}
+.cat-pick button.on{color:#fff;border-color:transparent;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.sheet-btns{display:flex;gap:9px;margin-top:4px}
+.btn-main{flex:1;background:var(--grad);color:#fff;border-radius:13px;padding:12px;
+  font-weight:800;font-size:15px}
+.btn-main:active{transform:scale(.97)}
+.sheet .btn-ghost{flex:0 0 96px}
+
+/* toast */
+#toast{position:fixed;left:50%;bottom:calc(96px + var(--safe-b));transform:translateX(-50%) translateY(8px);
+  background:var(--ink);color:#fff;font-size:13px;padding:9px 18px;border-radius:99px;
+  opacity:0;pointer-events:none;transition:all .25s;z-index:60;white-space:nowrap}
+#toast.on{opacity:.94;transform:translateX(-50%) translateY(0)}
