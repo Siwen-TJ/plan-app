@@ -116,6 +116,7 @@ function renderToday() {
   const p = progressOf(ds);
   document.getElementById('tdProgTxt').textContent = p.dn + ' / ' + p.total;
   document.getElementById('tdProgBar').style.width = (p.total ? Math.round(p.dn / p.total * 100) : 0) + '%';
+  renderWt();
 }
 
 /* ---------- 渲染：日常任务列表（今日页） ---------- */
@@ -276,6 +277,7 @@ function renderWt() {
   if (!dates.length) {
     chart.innerHTML = '<text x="160" y="62" text-anchor="middle" fill="#C9BEE8" font-size="13">暂无记录，输入体重开始追踪</text>';
     kpis.innerHTML = '';
+    document.getElementById('wtHistory').innerHTML = '';
     return;
   }
   const vals = dates.map((k) => store.wt[k]);
@@ -298,6 +300,29 @@ function renderWt() {
   const last = pts[pts.length - 1];
   svg += '<circle cx="' + X(last.i).toFixed(1) + '" cy="' + Y(last.v).toFixed(1) + '" r="4" fill="#FF7AB6"/>';
   chart.innerHTML = svg;
+
+  // 体重历史记录列表（最新在前）
+  const hist = document.getElementById('wtHistory');
+  const sorted = dates.slice().sort((a, b) => b.localeCompare(a));
+  let h = '<div class="wt-hist-title">历史记录</div><div class="wt-hist-list">';
+  sorted.forEach((d, i) => {
+    const v = store.wt[d];
+    const prev = sorted[i + 1] ? store.wt[sorted[i + 1]] : null;
+    let diff = '';
+    if (prev !== null) {
+      const delta = Math.round((v - prev) * 10) / 10;
+      const color = delta <= 0 ? '#2FD7A5' : '#FF4D6D';
+      diff = '<span class="wt-diff" style="color:' + color + '">' + (delta >= 0 ? '+' : '') + delta.toFixed(1) + '</span>';
+    }
+    const isToday = d === todayISO();
+    h += '<div class="wt-hist-item">' +
+      '<span class="wt-hist-date">' + d.slice(5) + (isToday ? ' 今天' : '') + '</span>' +
+      '<span class="wt-hist-val">' + v.toFixed(1) + ' kg</span>' +
+      diff +
+      '</div>';
+  });
+  h += '</div>';
+  hist.innerHTML = h;
 }
 
 /* ---------- 弹层 ---------- */
@@ -502,7 +527,6 @@ function show(v) {
 function refresh() {
   if (curView === 'today') renderToday();
   else if (curView === 'cal') { renderCal(); renderDayPanel(); }
-  else if (curView === 'me') renderWt();
 }
 document.querySelectorAll('.tab').forEach((b) => b.addEventListener('click', () => { requestNotifyPerm(); show(b.dataset.v); }));
 
