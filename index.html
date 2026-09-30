@@ -42,6 +42,37 @@
       <button class="btn-add" id="tdAdd">＋ 添加</button>
     </div>
     <div class="tasklist" id="tdList"></div>
+
+    <!-- 体重记录 -->
+    <div class="sec-head page-head"><h2>体重记录</h2></div>
+    <div class="wt-card">
+      <div class="wt-row">
+        <input type="number" step="0.1" inputmode="decimal" id="wtVal" placeholder="今日体重 kg">
+        <button class="btn-add" id="wtAdd">记录</button>
+      </div>
+      <svg id="wtChart" viewBox="0 0 320 120" preserveAspectRatio="none"></svg>
+      <div class="wt-kpis" id="wtKpis"></div>
+      <div class="wt-history" id="wtHistory"></div>
+    </div>
+
+    <!-- 数据管理 -->
+    <div class="sec-head page-head"><h2>数据</h2></div>
+    <div class="me-card">
+      <button class="me-btn" id="btnExport">⬆ 导出数据备份</button>
+      <button class="me-btn" id="btnImport">⬇ 导入数据备份</button>
+      <input type="file" id="fileImport" accept=".json,application/json" hidden>
+      <button class="me-btn danger" id="btnClear">🗑 清空全部数据</button>
+    </div>
+
+    <!-- 安装到手机 -->
+    <div class="sec-head page-head"><h2>安装到手机</h2></div>
+    <div class="me-card install">
+      <p><b>安卓（Chrome）：</b>用浏览器打开本页 → 点右上角 ⋮ →「添加到主屏幕 / 安装应用」。</p>
+      <p><b>iPhone（Safari）：</b>点底部分享 ↑ →「添加到主屏幕」。</p>
+      <p>安装后可离线使用，数据保存在本机。</p>
+    </div>
+
+    <p class="about">重塑计划表 v1.3.0 · 农历支持 1901–2100 · 数据仅存本机</p>
   </section>
 
   <!-- ===== 日历 ===== -->
@@ -72,43 +103,12 @@
     </div>
   </section>
 
-  <!-- ===== 我的 ===== -->
-  <section class="view" id="v-me">
-    <div class="sec-head page-head"><h2>体重记录</h2></div>
-    <div class="wt-card">
-      <div class="wt-row">
-        <input type="number" step="0.1" inputmode="decimal" id="wtVal" placeholder="今日体重 kg">
-        <button class="btn-add" id="wtAdd">记录</button>
-      </div>
-      <svg id="wtChart" viewBox="0 0 320 120" preserveAspectRatio="none"></svg>
-      <div class="wt-kpis" id="wtKpis"></div>
-    </div>
-
-    <div class="sec-head page-head"><h2>数据</h2></div>
-    <div class="me-card">
-      <button class="me-btn" id="btnExport">⬆ 导出数据备份</button>
-      <button class="me-btn" id="btnImport">⬇ 导入数据备份</button>
-      <input type="file" id="fileImport" accept=".json,application/json" hidden>
-      <button class="me-btn danger" id="btnClear">🗑 清空全部数据</button>
-    </div>
-
-    <div class="sec-head page-head"><h2>安装到手机</h2></div>
-    <div class="me-card install">
-      <p><b>安卓（Chrome）：</b>用浏览器打开本页 → 点右上角 ⋮ →「添加到主屏幕 / 安装应用」。</p>
-      <p><b>iPhone（Safari）：</b>点底部分享 ↑ →「添加到主屏幕」。</p>
-      <p>安装后可离线使用，数据保存在本机。</p>
-    </div>
-
-    <p class="about">重塑计划表 v1.2.0 · 农历支持 1901–2100 · 数据仅存本机</p>
-  </section>
-
 </main>
 
 <!-- ===== 底部导航 ===== -->
 <nav class="tabbar" id="tabbar">
   <button class="tab on" data-v="today"><span class="ti">☀</span><span>今日</span></button>
   <button class="tab" data-v="cal"><span class="ti">📅</span><span>日历</span></button>
-  <button class="tab" data-v="me"><span class="ti">💜</span><span>我的</span></button>
 </nav>
 
 <!-- ===== 底部弹层表单 ===== -->
