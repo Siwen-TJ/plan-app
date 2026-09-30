@@ -125,6 +125,16 @@ input,select{font:inherit}
 .wt-kpis b{display:block;font-size:16px;font-variant-numeric:tabular-nums}
 .wt-kpis span{font-size:10.5px;color:var(--mut)}
 
+/* 体重历史记录 */
+.wt-history{margin-top:14px}
+.wt-hist-title{font-size:13px;font-weight:700;color:var(--mut);margin-bottom:8px}
+.wt-hist-list{display:flex;flex-direction:column;gap:6px;max-height:240px;overflow-y:auto}
+.wt-hist-item{display:flex;align-items:center;justify-content:space-between;
+  background:var(--bg);border-radius:10px;padding:9px 12px;font-size:13.5px}
+.wt-hist-date{color:var(--mut);font-variant-numeric:tabular-nums}
+.wt-hist-val{font-weight:700;font-variant-numeric:tabular-nums}
+.wt-diff{font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;min-width:42px;text-align:right}
+
 /* ===== 底部导航 ===== */
 .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:40;
   padding-bottom:var(--safe-b);background:rgba(255,255,255,.96);
