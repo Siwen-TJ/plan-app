@@ -162,6 +162,23 @@ input,select{font:inherit}
 .btn-main:active{transform:scale(.97)}
 .sheet .btn-ghost{flex:0 0 96px}
 
+/* 日期范围并排 */
+.sheet .row2{display:flex;gap:10px}
+.sheet .row2 fieldset{flex:1;min-width:0}
+
+/* ===== 提醒弹层 ===== */
+.reminder-popup{position:fixed;inset:0;background:rgba(42,35,68,.55);z-index:70;
+  display:flex;align-items:center;justify-content:center;padding:24px}
+.reminder-popup .rp-card{background:var(--card);border-radius:22px;padding:24px 22px;
+  max-width:360px;width:100%;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,.25);
+  border-top:6px solid var(--cat,#8B5CF6);animation:rpPop .3s ease}
+@keyframes rpPop{from{transform:scale(.85);opacity:0}to{transform:none;opacity:1}}
+.reminder-popup .rp-icon{font-size:44px;margin-bottom:8px}
+.reminder-popup .rp-title{font-size:18px;font-weight:800;margin-bottom:4px}
+.reminder-popup .rp-meta{font-size:13px;color:var(--mut);margin-bottom:18px}
+.reminder-popup .rp-ok{background:var(--grad);color:#fff;border-radius:13px;padding:12px 28px;
+  font-weight:800;font-size:15px}
+
 /* toast */
 #toast{position:fixed;left:50%;bottom:calc(96px + var(--safe-b));transform:translateX(-50%) translateY(8px);
   background:var(--ink);color:#fff;font-size:13px;padding:9px 18px;border-radius:99px;
