@@ -37,7 +37,11 @@
       <div class="prog-bar"><i id="tdProgBar"></i></div>
     </div>
 
-    <!-- 日历 -->
+    <!-- 万年历 -->
+    <div class="sec-head page-head">
+      <h2>万年历</h2>
+      <span class="cal-hint">点日期查宜忌</span>
+    </div>
     <div class="cal-head">
       <button class="nav-btn" id="calPrev" aria-label="上个月">‹</button>
       <div class="cal-title" id="calTitle">2026年9月</div>
@@ -93,7 +97,23 @@
       <p>安装后可离线使用，数据保存在本机。</p>
     </div>
 
-    <p class="about">重塑计划表 v1.3.3 · 农历支持 1901–2100 · 数据仅存本机</p>
+    <p class="about">重塑计划表 v1.4.0 · 农历支持 1901–2100 · 数据仅存本机</p>
+  </section>
+
+  <!-- ===== 卜卦 ===== -->
+  <section class="view" id="v-divine">
+    <header class="hero dv-hero">
+      <div class="hd-date">周易卜卦</div>
+      <div class="hd-lunar">六十四卦 · 心诚则灵</div>
+    </header>
+
+    <div class="dv-card">
+      <p class="dv-tip">请在心中默念你想要问的事情</p>
+      <button class="btn-divine" id="btnDivine">起 卦</button>
+      <div class="dv-result" id="dvResult"></div>
+    </div>
+
+    <p class="dv-note">卦象仅作娱乐参考，命由己造，事在人为</p>
   </section>
 
 </main>
@@ -101,6 +121,7 @@
 <!-- ===== 底部导航 ===== -->
 <nav class="tabbar" id="tabbar">
   <button class="tab on" data-v="today"><span class="ti">☀</span><span>今日</span></button>
+  <button class="tab" data-v="divine"><span class="ti">☯</span><span>卜卦</span></button>
 </nav>
 
 <!-- ===== 底部弹层表单 ===== -->
@@ -115,7 +136,17 @@
   </div>
 </div>
 
+<!-- ===== 万年历当日黄历弹层 ===== -->
+<div class="mask" id="almMask"></div>
+<div class="alm-sheet" id="almSheet">
+  <div class="sheet-grip"></div>
+  <button class="alm-close" id="almClose" aria-label="关闭">✕</button>
+  <div id="almBody"></div>
+</div>
+
 <script src="lunar.js"></script>
+<script src="almanac.js"></script>
+<script src="gua.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
