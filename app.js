@@ -16,41 +16,22 @@ const CATS = {
   supp:   { name: '补剂', c: '#FF6B6B' },
 };
 
-/* ---------- 默认模板（源自一个月完整计划表作息骨架，可自由编辑） ---------- */
-const DEF_TPL = [
-  { t: '05:00', title: '起床 · 洗漱', cat: 'base' },
-  { t: '05:15', title: '晨间护肤', cat: 'skin' },
-  { t: '05:25', title: '晨间补剂 + 温水', cat: 'supp' },
-  { t: '05:30', title: '出门通勤', cat: 'commute' },
-  { t: '12:00', title: '午餐', cat: 'eat' },
-  { t: '13:00', title: '午休 20 分钟', cat: 'rest' },
-  { t: '18:30', title: '晚餐', cat: 'eat' },
-  { t: '19:30', title: '训练', cat: 'train' },
-  { t: '21:00', title: '阅读 30 分钟', cat: 'read' },
-  { t: '21:40', title: '夜间护肤', cat: 'skin' },
-  { t: '22:00', title: '睡觉', cat: 'base' },
-];
-
 /* ---------- 状态 ----------
- * tpl:   计划模板（每天固定时间的事项）
  * daily: 日常任务 {id, title, cat, start, end, remind}  —— 今日页展示
  * todo:  待办事项 {id, title, cat, start, end, remind}  —— 日历当日面板展示
  * done:  完成状态 done[dateStr][type+':'+id] = 1
  * wt:    体重记录
  */
 const LS = 'plan-pwa.v1';
-let store = { tpl: [], daily: [], todo: [], done: {}, wt: {} };
+let store = { daily: [], todo: [], done: {}, wt: {} };
 try {
   const raw = localStorage.getItem(LS);
   if (raw) { const o = JSON.parse(raw); if (o && typeof o === 'object') store = Object.assign(store, o); }
 } catch (e) {}
-if (!Array.isArray(store.tpl)) store.tpl = [];
 if (!Array.isArray(store.daily)) store.daily = [];
 if (!Array.isArray(store.todo)) store.todo = [];
 if (typeof store.done !== 'object' || store.done === null) store.done = {};
 if (typeof store.wt !== 'object' || store.wt === null) store.wt = {};
-// 模板留空，让用户自由添加（如需默认骨架可取消注释下一行）
-// if (!store.tpl.length) store.tpl = DEF_TPL.map((d, i) => Object.assign({ id: 't' + i }, d));
 
 function save() { try { localStorage.setItem(LS, JSON.stringify(store)); } catch (e) { toast('保存失败'); } }
 
@@ -287,39 +268,6 @@ function renderDayPanel() {
   renderTodoList(document.getElementById('dpList'), selDate);
 }
 
-/* ---------- 渲染：模板 ---------- */
-function renderTpl() {
-  const box = document.getElementById('tplList');
-  box.innerHTML = '';
-  if (!store.tpl.length) {
-    box.innerHTML = '<div class="empty"><b>📝</b>还没有模板任务<br>模板任务每天固定时间自动出现</div>';
-    return;
-  }
-  const sorted = store.tpl.slice().sort((a, b) => a.t.localeCompare(b.t));
-  sorted.forEach((t) => {
-    const el = document.createElement('div');
-    el.className = 'task';
-    el.style.setProperty('--cat', CATS[t.cat] ? CATS[t.cat].c : '#8B5CF6');
-    el.innerHTML = '<div class="bd"><div class="tt"></div><div class="mt"><span class="tm"></span><span class="cat"></span></div></div>';
-    el.querySelector('.tt').textContent = t.title;
-    el.querySelector('.tm').textContent = t.t;
-    el.querySelector('.cat').textContent = CATS[t.cat] ? CATS[t.cat].name : '任务';
-    const edit = document.createElement('button');
-    edit.className = 'del';
-    edit.textContent = '✎';
-    edit.addEventListener('click', () => openTplSheet(t));
-    const del = document.createElement('button');
-    del.className = 'del';
-    del.textContent = '🗑';
-    del.addEventListener('click', () => {
-      store.tpl = store.tpl.filter((x) => x.id !== t.id);
-      save(); renderTpl(); toast('已删除');
-    });
-    el.appendChild(edit); el.appendChild(del);
-    box.appendChild(el);
-  });
-}
-
 /* ---------- 渲染：体重 ---------- */
 function renderWt() {
   const chart = document.getElementById('wtChart');
@@ -432,46 +380,17 @@ function openTaskSheet(type, _, editItem) {
   };
 }
 
-/* 模板任务弹层（保持原有：时间+内容+类别） */
-function openTplSheet(editItem) {
-  const isEdit = !!editItem;
-  const item = editItem || { t: '08:00', title: '', cat: 'base' };
-  sheetCtx = { type: 'tpl', isEdit, item };
-  openSheet(
-    (isEdit ? '编辑' : '添加') + '模板任务',
-    '<fieldset><label>时间</label><input type="time" id="fT" value="' + (item.t || '08:00') + '"></fieldset>' +
-    '<fieldset><label>内容</label><input type="text" id="fTitle" maxlength="40" placeholder="要做的事…" value="' + (item.title || '').replace(/"/g, '&quot;') + '"></fieldset>' +
-    '<fieldset><label>类别</label>' + catPickHTML(item.cat) + '</fieldset>'
-  );
-  const getCat = wireCatPick(item.cat);
-  setTimeout(() => document.getElementById('fTitle').focus(), 100);
-  document.getElementById('sheetOk').onclick = () => {
-    const t = document.getElementById('fT').value || '08:00';
-    const title = document.getElementById('fTitle').value.trim();
-    if (!title) { toast('请填写内容'); return; }
-    const cat = getCat();
-    if (isEdit) Object.assign(editItem, { t, title, cat });
-    else store.tpl.push({ id: 't' + Date.now().toString(36), t, title, cat });
-    save(); closeSheet(); refresh(); toast(isEdit ? '已保存' : '已添加');
-  };
-}
-
-/* 体重弹层 */
-function openWtSheet() {
+/* 体重记录：直接读取输入框，按今天日期保存 */
+function recordWeight() {
+  const input = document.getElementById('wtVal');
+  const w = parseFloat(input.value);
+  if (!(w > 0 && w < 500)) { toast('请输入正确体重'); return; }
   const ds = todayISO();
-  sheetCtx = { type: 'wt' };
-  openSheet('记录体重',
-    '<fieldset><label>日期</label><input type="date" id="fD" value="' + ds + '" max="' + ds + '"></fieldset>' +
-    '<fieldset><label>体重（kg）</label><input type="number" step="0.1" inputmode="decimal" id="fW" placeholder="如 65.5"></fieldset>'
-  );
-  setTimeout(() => document.getElementById('fW').focus(), 100);
-  document.getElementById('sheetOk').onclick = () => {
-    const d2 = document.getElementById('fD').value;
-    const w = parseFloat(document.getElementById('fW').value);
-    if (!d2 || !(w > 0 && w < 500)) { toast('请输入正确体重'); return; }
-    store.wt[d2] = Math.round(w * 10) / 10;
-    save(); closeSheet(); renderWt(); toast('已记录');
-  };
+  store.wt[ds] = Math.round(w * 10) / 10;
+  save();
+  input.value = '';
+  renderWt();
+  toast('已记录 ' + store.wt[ds] + ' kg');
 }
 
 /* ---------- 闹钟提醒 ---------- */
@@ -583,7 +502,6 @@ function show(v) {
 function refresh() {
   if (curView === 'today') renderToday();
   else if (curView === 'cal') { renderCal(); renderDayPanel(); }
-  else if (curView === 'tpl') renderTpl();
   else if (curView === 'me') renderWt();
 }
 document.querySelectorAll('.tab').forEach((b) => b.addEventListener('click', () => { requestNotifyPerm(); show(b.dataset.v); }));
@@ -591,14 +509,14 @@ document.querySelectorAll('.tab').forEach((b) => b.addEventListener('click', () 
 /* ---------- 事件绑定 ---------- */
 document.getElementById('tdAdd').addEventListener('click', () => { requestNotifyPerm(); openTaskSheet('daily'); });
 document.getElementById('dpAdd').addEventListener('click', () => { requestNotifyPerm(); openTaskSheet('todo'); });
-document.getElementById('tplAdd').addEventListener('click', openTplSheet);
 document.getElementById('calPrev').addEventListener('click', () => { calM--; if (calM < 1) { calM = 12; calY--; } renderCal(); });
 document.getElementById('calNext').addEventListener('click', () => { calM++; if (calM > 12) { calM = 1; calY++; } renderCal(); });
 document.getElementById('calToday').addEventListener('click', () => {
   const n = new Date(); calY = n.getFullYear(); calM = n.getMonth() + 1;
   selDate = todayISO(); renderCal(); renderDayPanel();
 });
-document.getElementById('wtAdd').addEventListener('click', openWtSheet);
+document.getElementById('wtAdd').addEventListener('click', recordWeight);
+document.getElementById('wtVal').addEventListener('keydown', (e) => { if (e.key === 'Enter') recordWeight(); });
 document.getElementById('btnExport').addEventListener('click', () => {
   const blob = new Blob([JSON.stringify(store, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
@@ -618,8 +536,7 @@ document.getElementById('fileImport').addEventListener('change', (e) => {
       const o = JSON.parse(r.result);
       if (!o || typeof o !== 'object') throw 0;
       if (!confirm('导入将覆盖当前数据，确定？')) return;
-      store = { tpl: [], daily: [], todo: [], done: {}, wt: {}, ...o };
-      if (!Array.isArray(store.tpl)) store.tpl = [];
+      store = { daily: [], todo: [], done: {}, wt: {}, ...o };
       if (!Array.isArray(store.daily)) store.daily = [];
       if (!Array.isArray(store.todo)) store.todo = [];
       save(); refresh(); toast('导入成功');
@@ -630,7 +547,7 @@ document.getElementById('fileImport').addEventListener('change', (e) => {
 });
 document.getElementById('btnClear').addEventListener('click', () => {
   if (confirm('确定清空全部数据？此操作不可恢复！')) {
-    store = { tpl: [], daily: [], todo: [], done: {}, wt: {} };
+    store = { daily: [], todo: [], done: {}, wt: {} };
     save(); refresh(); toast('已清空');
   }
 });
