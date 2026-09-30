@@ -116,6 +116,7 @@ function renderToday() {
   const p = progressOf(ds);
   document.getElementById('tdProgTxt').textContent = p.dn + ' / ' + p.total;
   document.getElementById('tdProgBar').style.width = (p.total ? Math.round(p.dn / p.total * 100) : 0) + '%';
+  renderTodoList(document.getElementById('tdTodoList'), ds);
   renderWt();
 }
 
@@ -532,6 +533,7 @@ document.querySelectorAll('.tab').forEach((b) => b.addEventListener('click', () 
 
 /* ---------- 事件绑定 ---------- */
 document.getElementById('tdAdd').addEventListener('click', () => { requestNotifyPerm(); openTaskSheet('daily'); });
+document.getElementById('tdTodoAdd').addEventListener('click', () => { requestNotifyPerm(); openTaskSheet('todo'); });
 document.getElementById('dpAdd').addEventListener('click', () => { requestNotifyPerm(); openTaskSheet('todo'); });
 document.getElementById('calPrev').addEventListener('click', () => { calM--; if (calM < 1) { calM = 12; calY--; } renderCal(); });
 document.getElementById('calNext').addEventListener('click', () => { calM++; if (calM > 12) { calM = 1; calY++; } renderCal(); });
