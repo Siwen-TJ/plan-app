@@ -1,5 +1,5 @@
 /* 重塑计划表 Service Worker —— 离线缓存 */
-const VERSION = 'v1.3.3';
+const VERSION = 'v1.4.0';
 const CACHE = 'plan-' + VERSION;
 const ASSETS = [
   './',
@@ -7,6 +7,8 @@ const ASSETS = [
   'styles.css',
   'app.js',
   'lunar.js',
+  'almanac.js',
+  'gua.js',
   'manifest.webmanifest',
   'icons/icon-192.png',
   'icons/icon-512.png',
