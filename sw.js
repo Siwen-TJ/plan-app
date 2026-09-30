@@ -1,5 +1,5 @@
 /* 重塑计划表 Service Worker —— 离线缓存 */
-const VERSION = 'v1.3.2';
+const VERSION = 'v1.3.3';
 const CACHE = 'plan-' + VERSION;
 const ASSETS = [
   './',
