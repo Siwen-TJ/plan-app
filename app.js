@@ -116,7 +116,7 @@ function renderToday() {
   const p = progressOf(ds);
   document.getElementById('tdProgTxt').textContent = p.dn + ' / ' + p.total;
   document.getElementById('tdProgBar').style.width = (p.total ? Math.round(p.dn / p.total * 100) : 0) + '%';
-  renderTodoList(document.getElementById('tdTodoList'), ds);
+  renderCal();
   renderWt();
 }
 
@@ -132,20 +132,6 @@ function renderDailyList(container, dateStr) {
     return;
   }
   list.forEach((task) => renderTaskRow(container, task, dateStr, 'daily'));
-}
-
-/* ---------- 渲染：To-do 列表（日历当日面板） ---------- */
-function renderTodoList(container, dateStr) {
-  container.innerHTML = '';
-  const list = todoOf(dateStr);
-  if (!list.length) {
-    const e = document.createElement('div');
-    e.className = 'empty';
-    e.innerHTML = '<b>📋</b>这一天没有待办<br>点右上角「＋ 添加」';
-    container.appendChild(e);
-    return;
-  }
-  list.forEach((task) => renderTaskRow(container, task, dateStr, 'todo'));
 }
 
 /* 通用任务行渲染 */
@@ -254,20 +240,9 @@ function renderCal() {
     cell.addEventListener('click', () => {
       selDate = ds;
       renderCal();
-      renderDayPanel();
     });
     grid.appendChild(cell);
   }
-}
-
-/* ---------- 渲染：日历下的当日面板 ---------- */
-function renderDayPanel() {
-  const [y, m, d] = selDate.split('-').map(Number);
-  const info = dayInfo(y, m, d);
-  const wd = new Date(y, m - 1, d).getDay();
-  document.getElementById('dpDate').textContent = m + '月' + d + '日 ' + WEEK[wd] + (selDate === todayISO() ? ' · 今天' : '');
-  document.getElementById('dpLunar').textContent = info.lu ? (info.lu.monthCn + info.lu.dayCn + (info.fest ? ' · ' + info.fest : info.isTerm ? ' · ' + info.term : '') + ' · ' + info.lu.gzYear + '年') : '';
-  renderTodoList(document.getElementById('dpList'), selDate);
 }
 
 /* ---------- 渲染：体重 ---------- */
@@ -527,19 +502,16 @@ function show(v) {
 }
 function refresh() {
   if (curView === 'today') renderToday();
-  else if (curView === 'cal') { renderCal(); renderDayPanel(); }
 }
 document.querySelectorAll('.tab').forEach((b) => b.addEventListener('click', () => { requestNotifyPerm(); show(b.dataset.v); }));
 
 /* ---------- 事件绑定 ---------- */
 document.getElementById('tdAdd').addEventListener('click', () => { requestNotifyPerm(); openTaskSheet('daily'); });
-document.getElementById('tdTodoAdd').addEventListener('click', () => { requestNotifyPerm(); openTaskSheet('todo'); });
-document.getElementById('dpAdd').addEventListener('click', () => { requestNotifyPerm(); openTaskSheet('todo'); });
 document.getElementById('calPrev').addEventListener('click', () => { calM--; if (calM < 1) { calM = 12; calY--; } renderCal(); });
 document.getElementById('calNext').addEventListener('click', () => { calM++; if (calM > 12) { calM = 1; calY++; } renderCal(); });
 document.getElementById('calToday').addEventListener('click', () => {
   const n = new Date(); calY = n.getFullYear(); calM = n.getMonth() + 1;
-  selDate = todayISO(); renderCal(); renderDayPanel();
+  selDate = todayISO(); renderCal();
 });
 document.getElementById('wtAdd').addEventListener('click', recordWeight);
 document.getElementById('wtVal').addEventListener('keydown', (e) => { if (e.key === 'Enter') recordWeight(); });
