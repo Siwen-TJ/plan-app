@@ -255,6 +255,7 @@ function renderCal() {
     cell.addEventListener('click', () => {
       selDate = ds;
       renderCal();
+      openAlmanac(yy, mm, dd);
     });
     grid.appendChild(cell);
   }
@@ -315,6 +316,82 @@ function renderWt() {
   h += '</div>';
   hist.innerHTML = h;
 }
+
+/* ---------- 万年历黄历弹层 ---------- */
+const almMask = document.getElementById('almMask');
+const almSheet = document.getElementById('almSheet');
+const almBody = document.getElementById('almBody');
+function openAlmanac(y, m, d) {
+  const info = dayInfo(y, m, d);
+  const al = getAlmanac(y, m, d);
+  const wd = new Date(y, m - 1, d).getDay();
+  const ds = iso(y, m, d);
+  const lunarStr = info.lu ? info.lu.monthCn + info.lu.dayCn : '--';
+  const festStr = [info.fest, info.term].filter(Boolean).join(' · ');
+  const yi = al.yi.map((t) => '<span class="alm-tag yi">' + t + '</span>').join('');
+  const ji = al.ji.map((t) => '<span class="alm-tag ji">' + t + '</span>').join('');
+  almBody.innerHTML =
+    '<div class="alm-date">' + y + '年' + m + '月' + d + '日 ' + WEEK[wd] + (ds === todayISO() ? ' · 今天' : '') + '</div>' +
+    '<div class="alm-lunar">' + lunarStr + (festStr ? ' · ' + festStr : '') + ' · ' + al.gzYear + '年(' + al.animal + ')</div>' +
+    '<div class="alm-stars"><span class="' + (al.yellow ? 'alm-badge yellow' : 'alm-badge black') + '">' + (al.yellow ? '黄道吉日' : '黑道日') + ' · ' + al.star + '</span></div>' +
+    '<div class="alm-yj"><div class="alm-yj-row"><b>宜</b><div class="alm-tags">' + yi + '</div></div>' +
+    '<div class="alm-yj-row"><b>忌</b><div class="alm-tags">' + ji + '</div></div></div>' +
+    '<div class="alm-grid">' +
+      '<div><span>年柱</span><b>' + al.gzYear + '</b></div>' +
+      '<div><span>月柱</span><b>' + al.gzMonth + '</b></div>' +
+      '<div><span>日柱</span><b>' + al.gzDay + '</b></div>' +
+      '<div><span>五行</span><b>' + al.nayin + '</b></div>' +
+      '<div><span>冲</span><b>' + al.chong + '</b></div>' +
+      '<div><span>煞</span><b>' + al.sha + '</b></div>' +
+    '</div>' +
+    '<div class="alm-shen"><div>吉神宜趋：' + al.jishen + '</div><div>凶神宜忌：' + al.xiongshen + '</div></div>';
+  almMask.classList.add('on');
+  almSheet.classList.add('on');
+}
+function closeAlmanac() {
+  almMask.classList.remove('on');
+  almSheet.classList.remove('on');
+}
+almMask.addEventListener('click', closeAlmanac);
+document.getElementById('almClose').addEventListener('click', closeAlmanac);
+
+/* ---------- 卜卦 ---------- */
+// 卦画：六爻从上往下渲染（初爻在最下）
+function yaoHTML(yao) {
+  let s = '';
+  for (let i = 5; i >= 0; i--) {
+    s += '<div class="yao' + (i === 0 ? ' first' : '') + '">' +
+      (yao[i] === '1'
+        ? '<i class="line yang"></i>'
+        : '<i class="line yin-l"></i><i class="line yin-r"></i>') +
+      '<em>' + ['初', '二', '三', '四', '五', '上'][i] + '爻</em></div>';
+  }
+  return s;
+}
+function drawGua() {
+  const box = document.getElementById('dvResult');
+  const g = GUA64[Math.floor(Math.random() * GUA64.length)];
+  const lo = TRIGRAMS[g.yao.slice(0, 3)];
+  const up = TRIGRAMS[g.yao.slice(3, 6)];
+  const LUCK_CLS = { '大吉': 'lv-dj', '吉': 'lv-j', '中吉': 'lv-zj', '小吉': 'lv-xj', '平': 'lv-p', '中下': 'lv-p', '凶': 'lv-x', '大凶': 'lv-x' };
+  const luckCls = 'luck ' + (LUCK_CLS[g.luck] || 'lv-p');
+  box.innerHTML =
+    '<div class="gua-out">' +
+      '<div class="gua-yao">' + yaoHTML(g.yao) + '</div>' +
+      '<div class="gua-meta">' +
+        '<div class="gua-no">第 ' + g.n + ' 卦</div>' +
+        '<div class="gua-name">' + g.name + '</div>' +
+        '<div class="gua-luck ' + luckCls + '">' + g.luck + '</div>' +
+        '<div class="gua-tri">' + up.n + up.x + '（上卦）<br>' + lo.n + lo.x + '（下卦）</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="gua-ci"><b>卦辞</b>' + g.ci + '</div>' +
+    '<div class="gua-read"><b>解卦</b>' + g.read + '</div>' +
+    '<button class="btn-divine ghost" id="btnAgain">再占一卦</button>';
+  document.getElementById('btnAgain').addEventListener('click', drawGua);
+  box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+document.getElementById('btnDivine').addEventListener('click', drawGua);
 
 /* ---------- 弹层 ---------- */
 const mask = document.getElementById('mask');
