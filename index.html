@@ -37,18 +37,25 @@
       <div class="prog-bar"><i id="tdProgBar"></i></div>
     </div>
 
+    <!-- 日历 -->
+    <div class="cal-head">
+      <button class="nav-btn" id="calPrev" aria-label="上个月">‹</button>
+      <div class="cal-title" id="calTitle">2026年9月</div>
+      <button class="nav-btn" id="calNext" aria-label="下个月">›</button>
+    </div>
+    <div class="cal-week">
+      <span class="we">日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span class="we">六</span>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div class="cal-foot">
+      <button class="btn-ghost" id="calToday">回到今天</button>
+    </div>
+
     <div class="sec-head">
       <h2>日常任务</h2>
       <button class="btn-add" id="tdAdd">＋ 添加</button>
     </div>
     <div class="tasklist" id="tdList"></div>
-
-    <!-- 今日待办 -->
-    <div class="sec-head">
-      <h2>今日待办</h2>
-      <button class="btn-add" id="tdTodoAdd">＋ 添加</button>
-    </div>
-    <div class="tasklist" id="tdTodoList"></div>
 
     <!-- 体重记录 -->
     <div class="sec-head page-head"><h2>体重记录</h2></div>
@@ -79,42 +86,13 @@
       <p>安装后可离线使用，数据保存在本机。</p>
     </div>
 
-    <p class="about">重塑计划表 v1.3.1 · 农历支持 1901–2100 · 数据仅存本机</p>
-  </section>
-
-  <!-- ===== 日历 ===== -->
-  <section class="view" id="v-cal">
-    <div class="cal-head">
-      <button class="nav-btn" id="calPrev" aria-label="上个月">‹</button>
-      <div class="cal-title" id="calTitle">2026年9月</div>
-      <button class="nav-btn" id="calNext" aria-label="下个月">›</button>
-    </div>
-    <div class="cal-week">
-      <span class="we">日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span class="we">六</span>
-    </div>
-    <div class="cal-grid" id="calGrid"></div>
-    <div class="cal-foot">
-      <button class="btn-ghost" id="calToday">回到今天</button>
-    </div>
-
-    <div class="day-panel" id="dayPanel">
-      <div class="dp-head">
-        <div class="dp-date" id="dpDate">--</div>
-        <div class="dp-lunar" id="dpLunar">--</div>
-      </div>
-      <div class="sec-head">
-        <h2>To-do list</h2>
-        <button class="btn-add" id="dpAdd">＋ 添加</button>
-      </div>
-      <div class="tasklist" id="dpList"></div>
-    </div>
+    <p class="about">重塑计划表 v1.3.2 · 农历支持 1901–2100 · 数据仅存本机</p>
   </section>
 
 </main>
 
 <!-- ===== 底部导航 ===== -->
 <nav class="tabbar" id="tabbar">
-  <button class="tab" data-v="cal"><span class="ti">📅</span><span>日历</span></button>
   <button class="tab on" data-v="today"><span class="ti">☀</span><span>今日</span></button>
 </nav>
 
